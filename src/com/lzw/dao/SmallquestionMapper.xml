@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lzw.dao.SmallquestionMapper" >
+  <resultMap id="BaseResultMap" type="com.lzw.domain.Smallquestion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="questionId" property="questionid" jdbcType="INTEGER" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
+    <result column="scorePointNum" property="scorepointnum" jdbcType="INTEGER" />
+    <result column="scorePoint1" property="scorepoint1" jdbcType="DOUBLE" />
+    <result column="scorePoint2" property="scorepoint2" jdbcType="DOUBLE" />
+    <result column="scorePoint3" property="scorepoint3" jdbcType="DOUBLE" />
+    <result column="scorePoint4" property="scorepoint4" jdbcType="DOUBLE" />
+    <result column="scorePoint5" property="scorepoint5" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, questionId, content, score, scorePointNum, scorePoint1, scorePoint2, scorePoint3, 
+    scorePoint4, scorePoint5
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.lzw.domain.SmallquestionExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_smallquestion
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_smallquestion
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_smallquestion
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.lzw.domain.SmallquestionExample" >
+    delete from t_smallquestion
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lzw.domain.Smallquestion" >
+    insert into t_smallquestion (id, questionId, content, 
+      score, scorePointNum, scorePoint1, 
+      scorePoint2, scorePoint3, scorePoint4, 
+      scorePoint5)
+    values (#{id,jdbcType=INTEGER}, #{questionid,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
+      #{score,jdbcType=DOUBLE}, #{scorepointnum,jdbcType=INTEGER}, #{scorepoint1,jdbcType=DOUBLE}, 
+      #{scorepoint2,jdbcType=DOUBLE}, #{scorepoint3,jdbcType=DOUBLE}, #{scorepoint4,jdbcType=DOUBLE}, 
+      #{scorepoint5,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lzw.domain.Smallquestion" >
+    insert into t_smallquestion
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="questionid != null" >
+        questionId,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="scorepointnum != null" >
+        scorePointNum,
+      </if>
+      <if test="scorepoint1 != null" >
+        scorePoint1,
+      </if>
+      <if test="scorepoint2 != null" >
+        scorePoint2,
+      </if>
+      <if test="scorepoint3 != null" >
+        scorePoint3,
+      </if>
+      <if test="scorepoint4 != null" >
+        scorePoint4,
+      </if>
+      <if test="scorepoint5 != null" >
+        scorePoint5,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="questionid != null" >
+        #{questionid,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepointnum != null" >
+        #{scorepointnum,jdbcType=INTEGER},
+      </if>
+      <if test="scorepoint1 != null" >
+        #{scorepoint1,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint2 != null" >
+        #{scorepoint2,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint3 != null" >
+        #{scorepoint3,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint4 != null" >
+        #{scorepoint4,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint5 != null" >
+        #{scorepoint5,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lzw.domain.SmallquestionExample" resultType="java.lang.Integer" >
+    select count(*) from t_smallquestion
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_smallquestion
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.questionid != null" >
+        questionId = #{record.questionid,jdbcType=INTEGER},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.score != null" >
+        score = #{record.score,jdbcType=DOUBLE},
+      </if>
+      <if test="record.scorepointnum != null" >
+        scorePointNum = #{record.scorepointnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.scorepoint1 != null" >
+        scorePoint1 = #{record.scorepoint1,jdbcType=DOUBLE},
+      </if>
+      <if test="record.scorepoint2 != null" >
+        scorePoint2 = #{record.scorepoint2,jdbcType=DOUBLE},
+      </if>
+      <if test="record.scorepoint3 != null" >
+        scorePoint3 = #{record.scorepoint3,jdbcType=DOUBLE},
+      </if>
+      <if test="record.scorepoint4 != null" >
+        scorePoint4 = #{record.scorepoint4,jdbcType=DOUBLE},
+      </if>
+      <if test="record.scorepoint5 != null" >
+        scorePoint5 = #{record.scorepoint5,jdbcType=DOUBLE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_smallquestion
+    set id = #{record.id,jdbcType=INTEGER},
+      questionId = #{record.questionid,jdbcType=INTEGER},
+      content = #{record.content,jdbcType=VARCHAR},
+      score = #{record.score,jdbcType=DOUBLE},
+      scorePointNum = #{record.scorepointnum,jdbcType=INTEGER},
+      scorePoint1 = #{record.scorepoint1,jdbcType=DOUBLE},
+      scorePoint2 = #{record.scorepoint2,jdbcType=DOUBLE},
+      scorePoint3 = #{record.scorepoint3,jdbcType=DOUBLE},
+      scorePoint4 = #{record.scorepoint4,jdbcType=DOUBLE},
+      scorePoint5 = #{record.scorepoint5,jdbcType=DOUBLE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lzw.domain.Smallquestion" >
+    update t_smallquestion
+    <set >
+      <if test="questionid != null" >
+        questionId = #{questionid,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepointnum != null" >
+        scorePointNum = #{scorepointnum,jdbcType=INTEGER},
+      </if>
+      <if test="scorepoint1 != null" >
+        scorePoint1 = #{scorepoint1,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint2 != null" >
+        scorePoint2 = #{scorepoint2,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint3 != null" >
+        scorePoint3 = #{scorepoint3,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint4 != null" >
+        scorePoint4 = #{scorepoint4,jdbcType=DOUBLE},
+      </if>
+      <if test="scorepoint5 != null" >
+        scorePoint5 = #{scorepoint5,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lzw.domain.Smallquestion" >
+    update t_smallquestion
+    set questionId = #{questionid,jdbcType=INTEGER},
+      content = #{content,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      scorePointNum = #{scorepointnum,jdbcType=INTEGER},
+      scorePoint1 = #{scorepoint1,jdbcType=DOUBLE},
+      scorePoint2 = #{scorepoint2,jdbcType=DOUBLE},
+      scorePoint3 = #{scorepoint3,jdbcType=DOUBLE},
+      scorePoint4 = #{scorepoint4,jdbcType=DOUBLE},
+      scorePoint5 = #{scorepoint5,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

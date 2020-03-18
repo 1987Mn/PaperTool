@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="table" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/papertool"
+                        userId="root"
+                        password="123">
+        </jdbcConnection>
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+		
+		<!-- 類 -->
+        <javaModelGenerator targetPackage="com.com.alibaba.domain" targetProject=".\src">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+		<!-- xml -->
+        <sqlMapGenerator targetPackage="com.com.alibaba.dao" targetProject=".\src">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+		<!-- mapper -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.com.alibaba.dao" targetProject=".\src">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+<!--         <table schema="DB2ADMIN" tableName="t_exam" domainObjectName="Exam" ></table> -->
+<!--         <table schema="DB2ADMIN" tableName="t_clbum" domainObjectName="Clbum" ></table> -->
+<!--         <table schema="DB2ADMIN" tableName="t_grade" domainObjectName="Grade" ></table> -->
+<!--         <table schema="DB2ADMIN" tableName="t_paper" domainObjectName="Paper" ></table>
+        <table schema="DB2ADMIN" tableName="t_smallquestion" domainObjectName="Smallquestion" ></table>
+        <table schema="DB2ADMIN" tableName="t_student" domainObjectName="Student" ></table> 
+        -->
+        <table schema="DB2ADMIN" tableName="t_question" domainObjectName="Question" ></table>
+    </context>
+</generatorConfiguration>

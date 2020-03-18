@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lzw.dao.ExamMapper" >
+
+<!-- 自定义 -->
+
+ 	<resultMap id="selectExamMap" type="com.lzw.domain.Exam" >
+	    <id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="paperId" property="paperid" jdbcType="INTEGER" />
+	    <result column="clbumId" property="clbumid" jdbcType="INTEGER" />
+	    <result column="testDate" property="testdate" jdbcType="TIMESTAMP" />
+	    <result column="clbumRoom" property="clbumroom" jdbcType="VARCHAR" />
+	    <result column="epeopleNum" property="peoplenum" jdbcType="INTEGER" />
+	    <association property="paper" javaType="com.lzw.domain.Paper">
+	    	<id column="paperId" property="id" jdbcType="INTEGER" />
+		    <result column="questionNum" property="questionnum" jdbcType="INTEGER" />
+		    <result column="psmallQuestionNum" property="smallquestionnum" jdbcType="INTEGER" />
+		    <result column="totalPoints" property="totalpoints" jdbcType="DOUBLE" />
+   			<result column="title" property="title" jdbcType="VARCHAR" />
+		    <collection property="questions" ofType="com.lzw.domain.Question" >
+			    <id column="qid" property="id" jdbcType="INTEGER" />
+			    <result column="paperId" property="paperid" jdbcType="INTEGER" />
+			    <result column="qcontent" property="content" jdbcType="VARCHAR" />
+			    <result column="qcontent1" property="content1" jdbcType="VARCHAR" />
+			    <result column="qscore" property="score" jdbcType="DOUBLE" />
+			    <result column="qsmallQuestionNum" property="smallquestionnum" jdbcType="INTEGER" />
+			    <collection property="smallqs" ofType="com.lzw.domain.Smallquestion">
+				    <id column="sqid" property="id" jdbcType="INTEGER" />
+				    <result column="qid" property="questionid" jdbcType="INTEGER" />
+				    <result column="sqcontent" property="content" jdbcType="VARCHAR" />
+				    <result column="sqscore" property="score" jdbcType="DOUBLE" />
+				    <result column="scorePointNum" property="scorepointnum" jdbcType="INTEGER" />
+				    <result column="scorePoint1" property="scorepoint1" jdbcType="DOUBLE" />
+				    <result column="scorePoint2" property="scorepoint2" jdbcType="DOUBLE" />
+				    <result column="scorePoint3" property="scorepoint3" jdbcType="DOUBLE" />
+				    <result column="scorePoint4" property="scorepoint4" jdbcType="DOUBLE" />
+				    <result column="scorePoint5" property="scorepoint5" jdbcType="DOUBLE" />
+			    </collection>
+			</collection>
+	    </association>
+	    
+	    <association property="clbum" javaType="com.lzw.domain.Clbum">
+			<id property="id" column="clbumId"/>
+		    <result column="clbumname" property="clbumname" jdbcType="VARCHAR" />
+		    <result column="major" property="major" jdbcType="VARCHAR" />
+		    <result column="nianji" property="nianji" jdbcType="CHAR" />
+		    <result column="cpeopleNum" property="peoplenum" jdbcType="INTEGER" />
+		</association>
+    </resultMap>
+	<select id="selectExam" resultMap="selectExamMap" parameterType="com.lzw.domain.Exam">
+
+		SELECT ecpq.*,sq.id sqid,sq.content sqcontent,sq.score sqscore,sq.scorePointNum,sq.scorePoint1,sq.scorePoint2,sq.scorePoint3,sq.scorePoint4,sq.scorePoint5
+		FROM
+			(SELECT ecp.*,q.content qcontent,q.content1 qcontent1,q.score qscore,q.id qid ,q.smallQuestionNum qsmallQuestionNum
+			FROM 
+			(SELECT ec.*,p.questionNum,p.smallQuestionNum psmallQuestionNum,p.totalPoints,p.title
+				FROM 
+					(SELECT 
+					e.id,e.clbumId,e.clbumRoom,e.paperId,e.peopleNum epeopleNum,e.testDate,
+					c.major,c.nianji,c.clbumName,c.peopleNum cpeopleNum
+					FROM t_exam e join t_clbum c on e.clbumId = c.id) 
+					ec join t_paper p on ec.paperId = p.id ) 
+			ecp join t_question q on ecp.paperId = q.paperId)
+		ecpq join t_smallquestion sq on ecpq.qid = sq.questionId
+		where ecpq.id = #{id}
+	</select>
+	<select id="selectExamAndClbum" resultMap="selectExamMap">
+		SELECT ecpq.*,sq.id sqid,sq.content sqcontent,sq.score sqscore,sq.scorePointNum,sq.scorePoint1,sq.scorePoint2,sq.scorePoint3,sq.scorePoint4,sq.scorePoint5
+		FROM
+			(SELECT ecp.*,q.content qcontent,q.content1 qcontent1,q.score qscore,q.id qid
+			FROM 
+				(SELECT ec.*,p.questionNum,p.smallQuestionNum,p.totalPoints,p.title
+				FROM 
+					(SELECT 
+						e.id,e.clbumId,e.clbumRoom,e.paperId,e.peopleNum epeopleNum,e.testDate,
+						c.major,c.nianji,c.clbumName,c.peopleNum cpeopleNum
+					FROM t_exam e join t_clbum c on e.clbumId = c.id
+					<if test="major != null">
+						where c.major LIKE concat(concat('%',#{major}),'%')
+					</if>
+					)ec join t_paper p on ec.paperId = p.id 
+				<if test="shijuan != null">
+						where p.title LIKE  concat(concat('%',#{shijuan}),'%')
+				</if>
+				)ecp join t_question q on ecp.paperId = q.paperId
+			)ecpq join t_smallquestion sq on ecpq.qid = sq.questionId
+	</select>
+<!-- 自定义 -->
+
+
+  <resultMap id="BaseResultMap" type="com.lzw.domain.Exam" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="paperId" property="paperid" jdbcType="INTEGER" />
+    <result column="clbumId" property="clbumid" jdbcType="INTEGER" />
+    <result column="testDate" property="testdate" jdbcType="TIMESTAMP" />
+    <result column="clbumRoom" property="clbumroom" jdbcType="VARCHAR" />
+    <result column="peopleNum" property="peoplenum" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, paperId, clbumId, testDate, clbumRoom, peopleNum
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.lzw.domain.ExamExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_exam
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_exam
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_exam
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.lzw.domain.ExamExample" >
+    delete from t_exam
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.lzw.domain.Exam" >
+    insert into t_exam (id, paperId, clbumId, 
+      testDate, clbumRoom, peopleNum
+      )
+    values (#{id,jdbcType=INTEGER}, #{paperid,jdbcType=INTEGER}, #{clbumid,jdbcType=INTEGER}, 
+      #{testdate,jdbcType=TIMESTAMP}, #{clbumroom,jdbcType=VARCHAR}, #{peoplenum,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.lzw.domain.Exam" >
+    insert into t_exam
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="paperid != null" >
+        paperId,
+      </if>
+      <if test="clbumid != null" >
+        clbumId,
+      </if>
+      <if test="testdate != null" >
+        testDate,
+      </if>
+      <if test="clbumroom != null" >
+        clbumRoom,
+      </if>
+      <if test="peoplenum != null" >
+        peopleNum,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="paperid != null" >
+        #{paperid,jdbcType=INTEGER},
+      </if>
+      <if test="clbumid != null" >
+        #{clbumid,jdbcType=INTEGER},
+      </if>
+      <if test="testdate != null" >
+        #{testdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clbumroom != null" >
+        #{clbumroom,jdbcType=VARCHAR},
+      </if>
+      <if test="peoplenum != null" >
+        #{peoplenum,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.lzw.domain.ExamExample" resultType="java.lang.Integer" >
+    select count(*) from t_exam
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_exam
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.paperid != null" >
+        paperId = #{record.paperid,jdbcType=INTEGER},
+      </if>
+      <if test="record.clbumid != null" >
+        clbumId = #{record.clbumid,jdbcType=INTEGER},
+      </if>
+      <if test="record.testdate != null" >
+        testDate = #{record.testdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.clbumroom != null" >
+        clbumRoom = #{record.clbumroom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.peoplenum != null" >
+        peopleNum = #{record.peoplenum,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_exam
+    set id = #{record.id,jdbcType=INTEGER},
+      paperId = #{record.paperid,jdbcType=INTEGER},
+      clbumId = #{record.clbumid,jdbcType=INTEGER},
+      testDate = #{record.testdate,jdbcType=TIMESTAMP},
+      clbumRoom = #{record.clbumroom,jdbcType=VARCHAR},
+      peopleNum = #{record.peoplenum,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lzw.domain.Exam" >
+    update t_exam
+    <set >
+      <if test="paperid != null" >
+        paperId = #{paperid,jdbcType=INTEGER},
+      </if>
+      <if test="clbumid != null" >
+        clbumId = #{clbumid,jdbcType=INTEGER},
+      </if>
+      <if test="testdate != null" >
+        testDate = #{testdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clbumroom != null" >
+        clbumRoom = #{clbumroom,jdbcType=VARCHAR},
+      </if>
+      <if test="peoplenum != null" >
+        peopleNum = #{peoplenum,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lzw.domain.Exam" >
+    update t_exam
+    set paperId = #{paperid,jdbcType=INTEGER},
+      clbumId = #{clbumid,jdbcType=INTEGER},
+      testDate = #{testdate,jdbcType=TIMESTAMP},
+      clbumRoom = #{clbumroom,jdbcType=VARCHAR},
+      peopleNum = #{peoplenum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
